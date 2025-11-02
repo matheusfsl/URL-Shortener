@@ -30,4 +30,16 @@ public class UrlService {
         return sb.toString();
     }
 
+    public String createShortUrl(UrlForm urlForm){
+        UrlModel urlModel = new UrlModel();
+        urlModel.setLongUrl(urlForm.getLongUrl());
+        do {
+            urlModel.setShortCode(generateCode());
+        }while (urlRepository.existsByShortCode(urlModel.getShortCode()));
+        urlRepository.save(urlModel);
+        return urlModel.getShortCode();
+    }
+
+
+
 }
