@@ -1,7 +1,6 @@
 package com.encurtador.encurtador;
 
 
-
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -30,16 +29,23 @@ public class UrlService {
         return sb.toString();
     }
 
-    public String createShortUrl(UrlForm urlForm){
+    public String createShortUrl(UrlForm urlForm) {
         UrlModel urlModel = new UrlModel();
         urlModel.setLongUrl(urlForm.getLongUrl());
         do {
             urlModel.setShortCode(generateCode());
-        }while (urlRepository.existsByShortCode(urlModel.getShortCode()));
+        } while (urlRepository.existsByShortCode(urlModel.getShortCode()));
         urlRepository.save(urlModel);
         return urlModel.getShortCode();
     }
 
+    public String getUrlLong(String shortUrl) {
+        UrlModel urlModel = urlRepository.findByShortCode(shortUrl)
+                .orElseThrow(() -> new UrlNotFoundException(
+                        String.format("Url não encontrada")
+                ));
 
+        return urlModel.getLongUrl();
+    }
 
 }

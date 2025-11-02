@@ -7,6 +7,9 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface UrlRepository extends JpaRepository<UrlModel,Long> {
-    boolean existsByShortCode (String shortCode);
+public interface UrlRepository extends JpaRepository<UrlModel, Long> {
+    boolean existsByShortCode(String shortCode);
+
+    Optional<UrlModel> findByShortCode(String shortCode);
+
 }
