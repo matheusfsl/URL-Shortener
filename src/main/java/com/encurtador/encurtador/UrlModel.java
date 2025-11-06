@@ -5,11 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
 
 @Entity
-@Table(name = "Url")
+@Table(name = "tb_url")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -24,5 +25,9 @@ public class UrlModel {
 
     @Column(name = "short_code", nullable = false)
     private String shortCode;
+
+    @OneToMany(mappedBy = "url", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<EngajamentoModel> engajamentos;
+
 
 }

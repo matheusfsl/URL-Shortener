@@ -1,5 +1,6 @@
 package com.encurtador.encurtador;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,9 +11,11 @@ import java.net.URI;
 @RequestMapping
 public class Controller {
     private final UrlService urlService;
+    private HttpServletRequest httpServletRequest;
 
-    public Controller(UrlService urlService) {
+    public Controller(UrlService urlService, HttpServletRequest httpServletRequest) {
         this.urlService = urlService;
+        this.httpServletRequest = httpServletRequest;
     }
 
     @PostMapping("/create")
@@ -24,7 +27,7 @@ public class Controller {
 
     @GetMapping("/{shortUrl}")
     public ResponseEntity<Void> getUrl(@PathVariable String shortUrl) {
-        String enderco = urlService.getUrlLong(shortUrl);
+        String enderco = urlService.getUrlLong(shortUrl, httpServletRequest);
         return ResponseEntity.status(HttpStatus.FOUND)
                 .location(URI.create(enderco))
                 .build();
