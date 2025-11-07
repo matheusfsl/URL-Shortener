@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -18,8 +19,11 @@ public class EngajamentoModel {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "click_count", nullable = true)
-    private int clickCount;
+    @Column(name = "click_count", nullable = false)
+    private int clickCount = 0;
+
+    @Column(name = "clicked_at", nullable = false)
+    private LocalDateTime clickedAt;
 
     @Column(name = "ip", nullable = false)
     private String ip;

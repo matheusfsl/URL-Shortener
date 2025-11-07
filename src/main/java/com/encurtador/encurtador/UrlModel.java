@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -25,6 +26,9 @@ public class UrlModel {
 
     @Column(name = "short_code", nullable = false)
     private String shortCode;
+
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "url", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EngajamentoModel> engajamentos;

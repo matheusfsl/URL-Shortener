@@ -19,18 +19,24 @@ public class Controller {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> shortenUrl(@RequestBody UrlForm urlForm) {
-        String endereco = urlService.createShortUrl(urlForm);
+    public ResponseEntity<UrlDto> shortenUrl(@RequestBody UrlForm urlForm) {
+        UrlDto endereco = urlService.createShortUrl(urlForm);
         return ResponseEntity.status(HttpStatus.CREATED).body(endereco);
     }
 
 
     @GetMapping("/{shortUrl}")
     public ResponseEntity<Void> getUrl(@PathVariable String shortUrl) {
-        String enderco = urlService.getUrlLong(shortUrl, httpServletRequest);
+        String enderco = urlService.rediretctLongUrl(shortUrl, httpServletRequest);
         return ResponseEntity.status(HttpStatus.FOUND)
                 .location(URI.create(enderco))
                 .build();
+    }
+
+    @GetMapping("/about/{url}")
+    public ResponseEntity<EngagementUrlDto> getEngagementUrl(@PathVariable String url) {
+        EngagementUrlDto engagementUrlDto = urlService.getUrlEngagement(url);
+        return ResponseEntity.status(200).body(engagementUrlDto);
     }
 
 }
