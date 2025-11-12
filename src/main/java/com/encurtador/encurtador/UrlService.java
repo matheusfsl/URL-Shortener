@@ -68,7 +68,6 @@ public class UrlService {
         engajamentoModel.setClickedAt(LocalDateTime.now());
 
         engajamentoRepository.save(engajamentoModel);
-        urlRepository.save(urlModel);
 
         return urlModel.getLongUrl();
     }

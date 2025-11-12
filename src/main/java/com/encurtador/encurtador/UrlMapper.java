@@ -2,6 +2,7 @@ package com.encurtador.encurtador;
 
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -46,17 +47,19 @@ public class UrlMapper {
                 ? (double) totalClicks / hoursSinceCreation
                 : totalClicks;
 
-        double avgTimeToAccessSeconds = engajamentos.stream()
-                .mapToDouble(e -> java.time.Duration.between(url.getCreatedAt(), e.getClickedAt()).toSeconds())
-                .average()
-                .orElse(0.0);
+        LocalDateTime firstClick = engajamentos.stream()
+                .map(EngajamentoModel::getClickedAt)
+                .min(LocalDateTime::compareTo)
+                .orElse(url.getCreatedAt());
+
+        double timeToFirstClick = Duration.between(url.getCreatedAt(), firstClick).toSeconds();
 
         EngagementUrlDto dto = new EngagementUrlDto();
         dto.setUrl(domain + url.getShortCode());
         dto.setClickCount(totalClicks);
         dto.setUniqueIps((int) uniqueIps);
         dto.setClicksPerHour(clicksPerHour);
-        dto.setAvgTimeToAccessSeconds(avgTimeToAccessSeconds);
+        dto.setAvgTimeToAccessSeconds(timeToFirstClick);
         dto.setCreatedAt(url.getCreatedAt());
 
         return dto;
