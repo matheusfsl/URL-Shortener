@@ -28,6 +28,9 @@ public class EngajamentoModel {
     @Column(name = "ip", nullable = false)
     private String ip;
 
+    @Column(name = "first_clicked_at", nullable = false)
+    private LocalDateTime firstClickedAt;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "url_id", nullable = false)
     private UrlModel url;

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 public class UrlMapper {
@@ -17,7 +18,7 @@ public class UrlMapper {
     }
     public UrlDto modelToDto (UrlModel urlModel){
         UrlDto urlDto = new UrlDto();
-        urlDto.setOrinalUrl(urlModel.getLongUrl());
+        urlDto.setOriginalUrl(urlModel.getLongUrl());
         urlDto.setUrlShortner(domain+urlModel.getShortCode());
         return urlDto;
     }
@@ -48,7 +49,8 @@ public class UrlMapper {
                 : totalClicks;
 
         LocalDateTime firstClick = engajamentos.stream()
-                .map(EngajamentoModel::getClickedAt)
+                .map(EngajamentoModel::getFirstClickedAt)
+                .filter(Objects::nonNull)
                 .min(LocalDateTime::compareTo)
                 .orElse(url.getCreatedAt());
 

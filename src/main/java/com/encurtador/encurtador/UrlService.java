@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -47,25 +46,33 @@ public class UrlService {
         return urlMapper.modelToDto(newUrlModel);
     }
 
-    public String rediretctLongUrl(String shortUrl, HttpServletRequest httpServletRequest) {
+    public String redirectLongUrl(String shortUrl, HttpServletRequest httpServletRequest) {
+
         UrlModel urlModel = urlRepository.findByShortCode(shortUrl)
                 .orElseThrow(() -> new UrlNotFoundException(
                         String.format("Url '%s' not found", shortUrl)
                 ));
-//        String ip = httpServletRequest.getRemoteAddr();
 
-        // IP customizado para testes via header
         String ip = httpServletRequest.getHeader("X-Test-IP");
         if (ip == null || ip.isEmpty()) {
             ip = httpServletRequest.getRemoteAddr();
         }
-        EngajamentoModel engajamentoModel = engajamentoRepository.findByUrlAndIp(urlModel, ip)
-                .orElse(new EngajamentoModel());
 
-        engajamentoModel.setUrl(urlModel);
-        engajamentoModel.setIp(ip);
-        engajamentoModel.setClickCount(engajamentoModel.getClickCount() + 1);
-        engajamentoModel.setClickedAt(LocalDateTime.now());
+        EngajamentoModel engajamentoModel = engajamentoRepository
+                .findByUrlAndIp(urlModel, ip)
+                .orElse(null);
+
+        if (engajamentoModel == null) {
+            engajamentoModel = new EngajamentoModel();
+            engajamentoModel.setUrl(urlModel);
+            engajamentoModel.setIp(ip);
+            engajamentoModel.setClickCount(1);
+            engajamentoModel.setFirstClickedAt(LocalDateTime.now());
+            engajamentoModel.setClickedAt(LocalDateTime.now());
+        } else {
+            engajamentoModel.setClickCount(engajamentoModel.getClickCount() + 1);
+            engajamentoModel.setClickedAt(LocalDateTime.now());
+        }
 
         engajamentoRepository.save(engajamentoModel);
 

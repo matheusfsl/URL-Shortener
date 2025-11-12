@@ -16,6 +16,6 @@ public class EngagementUrlDto {
     private Integer clickCount=0;
     private Integer uniqueIps = 0;
     private Double clicksPerHour = 0.0;
-    private Double avgTimeToAccessSeconds;
+    private Double avgTimeToAccessSeconds=0.0;
     private LocalDateTime createdAt;
 }

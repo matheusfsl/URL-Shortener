@@ -10,6 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UrlDto {
-    private String orinalUrl;
+    private String originalUrl;
     private String urlShortner;
 }
