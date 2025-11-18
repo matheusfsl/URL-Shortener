@@ -6,14 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Entity
 @Table(name = "url_engajamento")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class EngajamentoModel {
+public class EngagementModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

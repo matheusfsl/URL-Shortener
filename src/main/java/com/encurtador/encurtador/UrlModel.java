@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 
 @Entity
@@ -30,8 +29,14 @@ public class UrlModel {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "last_clicked_at")
+    private LocalDateTime lastClickedAt;
+
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive = true;
+
     @OneToMany(mappedBy = "url", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<EngajamentoModel> engajamentos;
+    private List<EngagementModel> engajamentos;
 
 
 }

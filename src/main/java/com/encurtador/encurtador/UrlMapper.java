@@ -23,7 +23,9 @@ public class UrlMapper {
         return urlDto;
     }
 
-    public EngagementUrlDto modelListToEngajamentoDto(List<EngajamentoModel> engajamentos) {
+//    public EngagementModel createEngagementModel()
+
+    public EngagementUrlDto modelListToEngajamentoDto(List<EngagementModel> engajamentos) {
         if (engajamentos == null || engajamentos.isEmpty()) {
             return null;
         }
@@ -31,11 +33,11 @@ public class UrlMapper {
         UrlModel url = engajamentos.get(0).getUrl();
 
         int totalClicks = engajamentos.stream()
-                .mapToInt(EngajamentoModel::getClickCount)
+                .mapToInt(EngagementModel::getClickCount)
                 .sum();
 
         long uniqueIps = engajamentos.stream()
-                .map(EngajamentoModel::getIp)
+                .map(EngagementModel::getIp)
                 .distinct()
                 .count();
 
@@ -49,7 +51,7 @@ public class UrlMapper {
                 : totalClicks;
 
         LocalDateTime firstClick = engajamentos.stream()
-                .map(EngajamentoModel::getFirstClickedAt)
+                .map(EngagementModel::getFirstClickedAt)
                 .filter(Objects::nonNull)
                 .min(LocalDateTime::compareTo)
                 .orElse(url.getCreatedAt());

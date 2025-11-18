@@ -10,27 +10,27 @@ import java.net.URI;
 
 @RestController
 @RequestMapping
-public class Controller {
+public class UrlController {
     private final UrlService urlService;
     private HttpServletRequest httpServletRequest;
 
-    public Controller(UrlService urlService, HttpServletRequest httpServletRequest) {
+    public UrlController(UrlService urlService, HttpServletRequest httpServletRequest) {
         this.urlService = urlService;
         this.httpServletRequest = httpServletRequest;
     }
 
     @PostMapping("/create")
     public ResponseEntity<UrlDto> shortenUrl(@Valid @RequestBody UrlForm urlForm) {
-        UrlDto endereco = urlService.createShortUrl(urlForm);
-        return ResponseEntity.status(HttpStatus.CREATED).body(endereco);
+        UrlDto urlDto = urlService.createShortUrl(urlForm);
+        return ResponseEntity.status(HttpStatus.CREATED).body(urlDto);
     }
 
 
     @GetMapping("/{shortUrl}")
     public ResponseEntity<Void> getUrl(@PathVariable String shortUrl) {
-        String enderco = urlService.redirectLongUrl(shortUrl, httpServletRequest);
+        String shortCode = urlService.redirectLongUrl(shortUrl, httpServletRequest);
         return ResponseEntity.status(HttpStatus.FOUND)
-                .location(URI.create(enderco))
+                .location(URI.create(shortCode))
                 .build();
     }
 

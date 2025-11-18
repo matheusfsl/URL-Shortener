@@ -2,6 +2,8 @@ package com.encurtador.encurtador;
 
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -13,14 +15,16 @@ import java.util.List;
 public class UrlService {
 
     private final UrlRepository urlRepository;
-    private final EngajamentoRepository engajamentoRepository;
+    private final EngagementRepository engagementRepository;
     private final UrlMapper urlMapper;
+    private final EngagementMapper engagementMapper;
 
 
-    public UrlService(UrlRepository urlRepository, EngajamentoRepository engajamentoRepository, UrlMapper urlMapper) {
+    public UrlService(UrlRepository urlRepository, EngagementRepository engagementRepository, UrlMapper urlMapper, EngagementMapper engagementMapper) {
         this.urlRepository = urlRepository;
-        this.engajamentoRepository = engajamentoRepository;
+        this.engagementRepository = engagementRepository;
         this.urlMapper = urlMapper;
+        this.engagementMapper = engagementMapper;
     }
 
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -46,45 +50,51 @@ public class UrlService {
         return urlMapper.modelToDto(newUrlModel);
     }
 
+    @Transactional
     public String redirectLongUrl(String shortUrl, HttpServletRequest httpServletRequest) {
 
-        UrlModel urlModel = urlRepository.findByShortCode(shortUrl)
+        UrlModel urlModel = urlRepository.findByShortCodeAndIsActiveTrue(shortUrl)
                 .orElseThrow(() -> new UrlNotFoundException(
-                        String.format("Url '%s' not found", shortUrl)
+                        String.format("Url '%s' not found or has been deactivated", shortUrl)
                 ));
+        if (!urlModel.isActive()) {
+            throw new UrlNotFoundException(
+                    String.format("Url '%s' has been deactivated due to inactivity", shortUrl)
+            );
+        }
 
         String ip = httpServletRequest.getHeader("X-Test-IP");
         if (ip == null || ip.isEmpty()) {
             ip = httpServletRequest.getRemoteAddr();
         }
+        urlModel.setLastClickedAt(LocalDateTime.now());
 
-        EngajamentoModel engajamentoModel = engajamentoRepository
+        EngagementModel engagementModel = engagementRepository
                 .findByUrlAndIp(urlModel, ip)
                 .orElse(null);
 
-        if (engajamentoModel == null) {
-            engajamentoModel = new EngajamentoModel();
-            engajamentoModel.setUrl(urlModel);
-            engajamentoModel.setIp(ip);
-            engajamentoModel.setClickCount(1);
-            engajamentoModel.setFirstClickedAt(LocalDateTime.now());
-            engajamentoModel.setClickedAt(LocalDateTime.now());
+        if (engagementModel == null) {
+            engagementModel = engagementMapper.createNew(urlModel, ip);
         } else {
-            engajamentoModel.setClickCount(engajamentoModel.getClickCount() + 1);
-            engajamentoModel.setClickedAt(LocalDateTime.now());
+            engagementMapper.updateExisting(engagementModel);
         }
-
-        engajamentoRepository.save(engajamentoModel);
-
-        return urlModel.getLongUrl();
+        try {
+            engagementRepository.save(engagementModel);
+            return urlModel.getLongUrl();
+        }catch (DataIntegrityViolationException e) {
+            throw new UrlShorteningException("Error saving the shortened URL, integrity violation occurred.");
+        } catch (Exception e) {
+            throw new UrlShorteningException("An unexpected error occurred while shortening the URL.");
+        }
     }
 
     public EngagementUrlDto getUrlEngagement(String shortCode) {
-        List<EngajamentoModel> engajamentos = engajamentoRepository.findAllByUrlShortCode(shortCode);
+        List<EngagementModel> engagements = engagementRepository.findAllByUrlShortCode(shortCode);
 
-        if (engajamentos.isEmpty()) {
+        if (engagements.isEmpty()) {
             throw new UrlNotFoundException(String.format("Url '%s' has not yet been accessed", shortCode));
         }
-        return urlMapper.modelListToEngajamentoDto(engajamentos);
+        return urlMapper.modelListToEngajamentoDto(engagements);
     }
+
 }

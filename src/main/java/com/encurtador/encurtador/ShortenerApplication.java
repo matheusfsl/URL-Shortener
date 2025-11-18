@@ -2,12 +2,14 @@ package com.encurtador.encurtador;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-public class EncurtadorApplication {
+@EnableScheduling
+public class ShortenerApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(EncurtadorApplication.class, args);
+		SpringApplication.run(ShortenerApplication.class, args);
 	}
 
 }
