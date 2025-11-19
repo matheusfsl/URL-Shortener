@@ -23,40 +23,42 @@ public class UrlMapper {
         return urlDto;
     }
 
-//    public EngagementModel createEngagementModel()
 
-    public EngagementUrlDto modelListToEngajamentoDto(List<EngagementModel> engajamentos) {
-        if (engajamentos == null || engajamentos.isEmpty()) {
-            return null;
+    public EngagementUrlDto modelListToEngajamentoDto(List<EngagementModel> engajamentos, UrlModel url) {
+
+        int totalClicks = 0;
+        long uniqueIps = 0;
+        double clicksPerHour = 0;
+        double timeToFirstClick = 0;
+
+        if (engajamentos != null && !engajamentos.isEmpty()) {
+
+            totalClicks = engajamentos.stream()
+                    .mapToInt(EngagementModel::getClickCount)
+                    .sum();
+
+            uniqueIps = engajamentos.stream()
+                    .map(EngagementModel::getIp)
+                    .distinct()
+                    .count();
+
+            long hoursSinceCreation = Duration.between(
+                    url.getCreatedAt(),
+                    LocalDateTime.now()
+            ).toHours();
+
+            clicksPerHour = hoursSinceCreation > 0
+                    ? (double) totalClicks / hoursSinceCreation
+                    : totalClicks;
+
+            LocalDateTime firstClick = engajamentos.stream()
+                    .map(EngagementModel::getFirstClickedAt)
+                    .filter(Objects::nonNull)
+                    .min(LocalDateTime::compareTo)
+                    .orElse(url.getCreatedAt());
+
+            timeToFirstClick = Duration.between(url.getCreatedAt(), firstClick).toSeconds();
         }
-
-        UrlModel url = engajamentos.get(0).getUrl();
-
-        int totalClicks = engajamentos.stream()
-                .mapToInt(EngagementModel::getClickCount)
-                .sum();
-
-        long uniqueIps = engajamentos.stream()
-                .map(EngagementModel::getIp)
-                .distinct()
-                .count();
-
-        long hoursSinceCreation = java.time.Duration.between(
-                url.getCreatedAt(),
-                LocalDateTime.now()
-        ).toHours();
-
-        double clicksPerHour = hoursSinceCreation > 0
-                ? (double) totalClicks / hoursSinceCreation
-                : totalClicks;
-
-        LocalDateTime firstClick = engajamentos.stream()
-                .map(EngagementModel::getFirstClickedAt)
-                .filter(Objects::nonNull)
-                .min(LocalDateTime::compareTo)
-                .orElse(url.getCreatedAt());
-
-        double timeToFirstClick = Duration.between(url.getCreatedAt(), firstClick).toSeconds();
 
         EngagementUrlDto dto = new EngagementUrlDto();
         dto.setUrl(domain + url.getShortCode());
@@ -68,4 +70,5 @@ public class UrlMapper {
 
         return dto;
     }
+
 }

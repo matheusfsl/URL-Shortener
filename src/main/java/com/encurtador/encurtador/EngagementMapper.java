@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 @Component
 public class EngagementMapper {
 
+
+
     public EngagementModel createNew(UrlModel url, String ip) {
         EngagementModel engagement = new EngagementModel();
         engagement.setUrl(url);

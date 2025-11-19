@@ -89,12 +89,16 @@ public class UrlService {
     }
 
     public EngagementUrlDto getUrlEngagement(String shortCode) {
-        List<EngagementModel> engagements = engagementRepository.findAllByUrlShortCode(shortCode);
 
-        if (engagements.isEmpty()) {
-            throw new UrlNotFoundException(String.format("Url '%s' has not yet been accessed", shortCode));
-        }
-        return urlMapper.modelListToEngajamentoDto(engagements);
+        UrlModel url = urlRepository.findByShortCode(shortCode)
+                .orElseThrow(() -> new UrlNotFoundException("Url not found or deactivated"));
+
+        List<EngagementModel> engagements =
+                engagementRepository.findAllByUrlShortCode(shortCode);
+
+        return urlMapper.modelListToEngajamentoDto(engagements, url);
     }
+
+
 
 }
