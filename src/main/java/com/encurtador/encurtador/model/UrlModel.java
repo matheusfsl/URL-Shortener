@@ -1,4 +1,4 @@
-package com.encurtador.encurtador;
+package com.encurtador.encurtador.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -20,7 +20,7 @@ public class UrlModel {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "long_url", nullable = false)
+    @Column(name = "long_url", nullable = false, columnDefinition = "TEXT")
     private String longUrl;
 
     @Column(name = "short_code", nullable = false)

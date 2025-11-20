@@ -1,5 +1,10 @@
-package com.encurtador.encurtador;
+package com.encurtador.encurtador.utils.mapper;
 
+import com.encurtador.encurtador.rest.dto.EngagementUrlDto;
+import com.encurtador.encurtador.rest.dto.UrlDto;
+import com.encurtador.encurtador.rest.form.UrlForm;
+import com.encurtador.encurtador.model.EngagementModel;
+import com.encurtador.encurtador.model.UrlModel;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;

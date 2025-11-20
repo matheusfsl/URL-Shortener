@@ -1,4 +1,4 @@
-package com.encurtador.encurtador;
+package com.encurtador.encurtador.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

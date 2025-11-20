@@ -1,4 +1,4 @@
-package com.encurtador.encurtador;
+package com.encurtador.encurtador.exception;
 
 public class UrlNotFoundException extends RuntimeException {
     private static final long serialVersionUID = 1L;

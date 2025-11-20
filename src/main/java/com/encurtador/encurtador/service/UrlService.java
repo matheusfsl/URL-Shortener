@@ -1,6 +1,17 @@
-package com.encurtador.encurtador;
+package com.encurtador.encurtador.service;
 
 
+import com.encurtador.encurtador.exception.UrlNotFoundException;
+import com.encurtador.encurtador.exception.UrlShorteningException;
+import com.encurtador.encurtador.utils.mapper.EngagementMapper;
+import com.encurtador.encurtador.utils.mapper.UrlMapper;
+import com.encurtador.encurtador.model.EngagementModel;
+import com.encurtador.encurtador.model.UrlModel;
+import com.encurtador.encurtador.repository.EngagementRepository;
+import com.encurtador.encurtador.repository.UrlRepository;
+import com.encurtador.encurtador.rest.dto.EngagementUrlDto;
+import com.encurtador.encurtador.rest.dto.UrlDto;
+import com.encurtador.encurtador.rest.form.UrlForm;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;

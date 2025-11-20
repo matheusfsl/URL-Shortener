@@ -1,5 +1,7 @@
-package com.encurtador.encurtador;
+package com.encurtador.encurtador.utils.mapper;
 
+import com.encurtador.encurtador.model.EngagementModel;
+import com.encurtador.encurtador.model.UrlModel;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;

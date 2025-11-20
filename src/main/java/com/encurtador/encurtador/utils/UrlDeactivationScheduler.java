@@ -1,5 +1,6 @@
-package com.encurtador.encurtador;
+package com.encurtador.encurtador.utils;
 
+import com.encurtador.encurtador.repository.UrlRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

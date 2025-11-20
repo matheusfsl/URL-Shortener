@@ -1,5 +1,9 @@
-package com.encurtador.encurtador;
+package com.encurtador.encurtador.rest;
 
+import com.encurtador.encurtador.rest.dto.EngagementUrlDto;
+import com.encurtador.encurtador.rest.dto.UrlDto;
+import com.encurtador.encurtador.rest.form.UrlForm;
+import com.encurtador.encurtador.service.UrlService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;

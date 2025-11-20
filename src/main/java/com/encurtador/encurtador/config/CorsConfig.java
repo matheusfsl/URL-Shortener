@@ -1,4 +1,4 @@
-package com.encurtador.encurtador;
+package com.encurtador.encurtador.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

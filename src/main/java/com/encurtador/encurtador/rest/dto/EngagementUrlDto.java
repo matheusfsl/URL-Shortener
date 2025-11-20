@@ -1,4 +1,4 @@
-package com.encurtador.encurtador;
+package com.encurtador.encurtador.rest.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
