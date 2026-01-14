@@ -1,33 +1,60 @@
-HELP.md
-target/
-.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+# ==============================================
+# ARQUIVOS SENSÍVEIS - NUNCA COMMITAR
+# ==============================================
+.env
+.env.local
+.env.*.local
+*.env
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
+# ==============================================
+# JAVA / SPRING BOOT
+# ==============================================
+backend/target/
+backend/*.class
+backend/*.jar
+backend/*.war
+backend/*.log
+backend/.mvn/
+backend/mvnw
+backend/mvnw.cmd
+backend/HELP.md
 
-### IntelliJ IDEA ###
-.idea
-*.iws
+# ==============================================
+# NODE / FRONTEND
+# ==============================================
+frontend/node_modules/
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/dist/
+frontend/build/
+frontend/.vite/
+
+# ==============================================
+# IDEs
+# ==============================================
+.idea/
 *.iml
-*.ipr
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
 .vscode/
+*.swp
+*.swo
+.DS_Store
+*.sublime-*
+
+# ==============================================
+# DOCKER
+# ==============================================
+docker-compose.override.yml
+*.log
+
+# ==============================================
+# DATABASES
+# ==============================================
+*.sql
+*.db
+*.sqlite
+
+# ==============================================
+# SISTEMA / OS
+# ==============================================
+Thumbs.db
