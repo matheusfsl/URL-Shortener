@@ -14,7 +14,7 @@ import java.util.Objects;
 
 @Component
 public class UrlMapper {
-    private static final String domain= "http://localhost:8080/";
+    private static final String domain= "https://encurtador-backend.fly.dev/";
 
     public UrlModel formTomodel(UrlForm urlForm){
         UrlModel urlModel = new UrlModel();

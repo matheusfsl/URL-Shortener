@@ -14,12 +14,13 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("https://frontend-dry-thunder-6741.fly.dev")
+                        .allowedOriginPatterns("*")  // Permite qualquer origem
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
-                        .allowCredentials(false);
+                        .exposedHeaders("*")
+                        .allowCredentials(false)
+                        .maxAge(3600);
             }
         };
     }
 }
-

@@ -6,33 +6,45 @@ import { useState } from "react";
 import DashboardModal from "./DashboardModal";
 import { getUrlInformation } from "../../core/services";
 import type { UrlServicesModel } from "../../core/services/models/UrlServicesModel";
+import linkInfoImage from "@/assets/link-information-image.svg"; 
 
 export default function LinkInformation() {
   const navigate = useNavigate();
-
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  const [dashboardInfo, setDashboardInfo] = useState<UrlServicesModel.GetUrlInformations.Response|undefined>(undefined)
+  const [dashboardInfo, setDashboardInfo] = useState<UrlServicesModel.GetUrlInformations.Response | undefined>(undefined);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const schema = zod.object({
     urlShort: zod
       .string()
-      .nonempty({ error: "Informe uma URL encurtada" })
-      .url({ protocol: /^https?$/, error: "URL inválida" }),
+      .nonempty("Informe uma URL encurtada")
+      .url("URL inválida"),
   });
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({ resolver: zodResolver(schema), reValidateMode: "onSubmit" });
 
-  const onSubmit = handleSubmit(async (data) => await getUrlInformation(data.urlShort).then(response=>{
-    console.log(response)
-    setDashboardInfo(response)
-    setIsOpenModal(true)
-  }).catch(error=>console.log('ERRO----',error)));
-  //const openModalTest = () => setIsOpenModal(true);
+  const onSubmit = handleSubmit(async (data) => {
+    setErrorMessage(null); // Limpa erro anterior
+    
+    await getUrlInformation(data.urlShort)
+      .then(response => {
+        console.log(response);
+        setDashboardInfo(response);
+        setIsOpenModal(true);
+      })
+      .catch(error => {
+        console.log('ERRO----', error);
+        setErrorMessage("Link não existe ou inválido");
+      });
+  });
+
   const onCloseModal = () => setIsOpenModal(false);
   const goToHome = () => navigate("/");
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-[linear-gradient(135deg,#f7f8fc,#e9ebf3)] px-4 font-sans">
       <div className="bg-white rounded-2xl shadow-lg max-w-5xl w-full p-12 md:flex md:items-center md:justify-between transition-shadow">
@@ -43,7 +55,7 @@ export default function LinkInformation() {
           <p className="text-gray-600 mb-6">
             Digite seu link encurtado para visualizar estatísticas de acesso.
           </p>
-
+          
           <form
             onSubmit={onSubmit}
             className="bg-gray-100 rounded-lg p-2 flex items-center max-w-md"
@@ -59,29 +71,38 @@ export default function LinkInformation() {
               Consultar
             </button>
           </form>
+          
           {errors.urlShort && (
-            <span className="text-error font-medium">
+            <span className="text-red-500 text-sm font-medium mt-2 block">
               {errors.urlShort.message}
             </span>
           )}
+          
+          {errorMessage && (
+            <span className="text-red-500 text-sm font-medium mt-2 block">
+              {errorMessage}
+            </span>
+          )}
+          
           <div className="flex justify-start mt-3">
             <span
-              className="text-blue-600 font-medium cursor-default"
+              className="text-blue-600 font-medium cursor-pointer hover:text-blue-700"
               onClick={goToHome}
             >
               Voltar ao Encurtador
             </span>
           </div>
         </div>
+        
         <div className="md:flex-1 mt-8 md:mt-0 md:pl-6 text-right">
           <img
-            src="/src/assets/link-information-image.svg"
+            src={linkInfoImage}
             alt="Ilustração de encurtador de URL"
             className="w-full max-w-md rounded-xl"
           />
         </div>
       </div>
-      <div className="animate-spin fill-red-500 size-3.5"></div>
+      
       {isOpenModal && dashboardInfo && (
         <DashboardModal
           isOpen={isOpenModal}
