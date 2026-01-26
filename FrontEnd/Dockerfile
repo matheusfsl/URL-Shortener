@@ -4,8 +4,8 @@
 FROM node:18 AS build
 WORKDIR /app
 
-# Argumento para URL da API
-ARG VITE_API_URL=http://localhost:8080
+# ⚠️ IMPORTANTE: Definir a URL da API ANTES do npm install
+ARG VITE_API_URL=https://encurtador-backend.fly.dev
 ENV VITE_API_URL=$VITE_API_URL
 
 COPY package*.json ./
@@ -19,13 +19,9 @@ RUN npm run build
 # ======================
 FROM nginx:alpine
 
-# Remove config default
 RUN rm /etc/nginx/conf.d/default.conf
 
-# Copia build do Vite
 COPY --from=build /app/dist /usr/share/nginx/html
-
-# Configuração do Nginx
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
